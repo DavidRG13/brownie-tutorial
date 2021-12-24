@@ -1,4 +1,5 @@
 from brownie import accounts, network, config, SimpleStorage, FundMe, MockV3Aggregator
+from web3 import Web3
 
 def deploy_simple_storage():
     account = get_account()
@@ -13,7 +14,7 @@ def deploy_fund_me():
     if network.show_active() != "development":
         price_feed_address = config["networks"][network.show_active()]["eth_usd_price_feed"]
     else:
-        mock_aggregator = MockV3Aggregator.deploy(18, 2000000000000000000000, {"from": account})
+        mock_aggregator = MockV3Aggregator.deploy(18, Web3.toWei(2000, "ether"), {"from": account})
         price_feed_address = mock_aggregator.address
 
     fund_me = FundMe.deploy(
