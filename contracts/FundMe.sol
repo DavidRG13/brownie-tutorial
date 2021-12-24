@@ -7,8 +7,10 @@ contract FundMe {
 
     mapping(address => uint256) public addressToAmountFunded;
     address owner;
+    AggregatorV3Interface public priceFeed;
 
-    constructor() public {
+    constructor(address _priceFeed) public {
+        priceFeed = AggregatorV3Interface(_priceFeed); //depends on the network we are
         owner = msg.sender;
     }
 
@@ -20,7 +22,6 @@ contract FundMe {
     }
 
     function getPriceInWei() public view returns(uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x22); //depends on the network we are
         (,int256 answer,,,) = priceFeed.latestRoundData();
         return uint256(answer * 10000000000);
     }

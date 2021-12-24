@@ -1,10 +1,18 @@
 dotenv: .env
 wallets:
   from_key: ${PRIVATE_KEY}
+networks:
+  rinkeby:
+    eth_usd_price_feed: '0x223'
+    verify: True
+  development:
+    verify: False
+
 dependencies:
-  - smartcontractkit/chainlink-brownie-contracts@1.1.1
+  - smartcontractkit/chainlink-brownie-contracts@0.3.0
 
 compiler:
   solc:
+    version: 0.6.6
     remappings:
-      - '@chainlink=smartcontractkit/chainlink-brownie-contracts@1.1.1'
+      - '@chainlink=smartcontractkit/chainlink-brownie-contracts@0.3.0'
