@@ -14,8 +14,9 @@ def deploy_fund_me():
     if network.show_active() != "development":
         price_feed_address = config["networks"][network.show_active()]["eth_usd_price_feed"]
     else:
-        mock_aggregator = MockV3Aggregator.deploy(18, Web3.toWei(2000, "ether"), {"from": account})
-        price_feed_address = mock_aggregator.address
+        if len(MockV3Aggregator) <= 0:
+            MockV3Aggregator.deploy(18, Web3.toWei(2000, "ether"), {"from": account})
+        price_feed_address = MockV3Aggregator[-1].address
 
     fund_me = FundMe.deploy(
         price_feed_address,
