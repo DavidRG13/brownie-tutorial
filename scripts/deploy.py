@@ -1,6 +1,8 @@
 from brownie import accounts, network, config, SimpleStorage, FundMe, MockV3Aggregator
 from web3 import Web3
 
+LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["develoment", "ganache-local"]
+
 def deploy_simple_storage():
     account = get_account()
     simple_storage = SimpleStorage.deploy({"from": account})
@@ -11,7 +13,7 @@ def deploy_fund_me():
 
     # if we are on a persistent network like rinkeby, use the associated address
     # otherwise, deploy mocks
-    if network.show_active() != "development":
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         price_feed_address = config["networks"][network.show_active()]["eth_usd_price_feed"]
     else:
         if len(MockV3Aggregator) <= 0:
@@ -23,10 +25,9 @@ def deploy_fund_me():
         {"from": account},
         publish_source=config["networks"][network.show_active()]["verify"],
     )
-    print(fund_me)
 
 def get_account():
-    if network.show_active() == "development":
+    if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         return accounts[0]
     else:
         return accounts.add(config["wallets"]["from_key"])

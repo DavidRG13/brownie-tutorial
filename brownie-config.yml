@@ -5,6 +5,8 @@ networks:
   rinkeby:
     eth_usd_price_feed: '0x223'
     verify: True
+  ganache-local:
+    verify: False
   development:
     verify: False
 
