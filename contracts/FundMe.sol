@@ -7,6 +7,7 @@ contract FundMe {
 
     mapping(address => uint256) public addressToAmountFunded;
     address owner;
+    address[] public funders;
     AggregatorV3Interface public priceFeed;
 
     constructor(address _priceFeed) public {
@@ -19,6 +20,7 @@ contract FundMe {
         require(getGWeiConversionRate(msg.value) >= minimumUsd, "You need to spend more ETH!!");
 
         addressToAmountFunded[msg.sender] += msg.value;
+        funders.push(msg.sender);
     }
 
     function getPriceInWei() public view returns(uint256) {
@@ -39,5 +41,11 @@ contract FundMe {
 
     function withdraw() public payable onlyOwner {
         msg.sender.transfer(address(this).balance);
+        
+        for (uint256 funderIndex=0; funderIndex < funders.length; funderIndex++){
+            address funder = funders[funderIndex];
+            addressToAmountFunded[funder] = 0;
+        }
+        funders = new address[](0);
     }
 }

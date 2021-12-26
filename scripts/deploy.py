@@ -1,7 +1,7 @@
 from brownie import accounts, network, config, SimpleStorage, FundMe, MockV3Aggregator
 from web3 import Web3
 
-LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["develoment", "ganache-local"]
+LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local"]
 
 def deploy_simple_storage():
     account = get_account()
@@ -25,6 +25,7 @@ def deploy_fund_me():
         {"from": account},
         publish_source=config["networks"][network.show_active()]["verify"],
     )
+    return fund_me
 
 def get_account():
     if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
