@@ -2,6 +2,7 @@ dotenv: .env
 wallets:
   from_key: ${PRIVATE_KEY}
 networks:
+  default: development
   rinkeby:
     eth_usd_price_feed: '0x223'
     verify: True
