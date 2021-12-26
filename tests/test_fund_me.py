@@ -1,5 +1,6 @@
-from brownie import accounts, FundMe
-from scripts.deploy import deploy_fund_me, get_account
+from brownie import accounts, network, exceptions
+from scripts.deploy import deploy_fund_me, get_account, LOCAL_BLOCKCHAIN_ENVIRONMENTS
+import pytest
 
 def test_can_fund_and_withdraw():
     # Given
@@ -19,3 +20,15 @@ def test_can_fund_and_withdraw():
 
     # Then
     assert fund_me.addressToAmountFunded(account.address) == 0
+
+def test_only_owner_can_withdraw():
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip("only for local testing")
+
+    # Given
+    fund_me = deploy_fund_me()
+    bad_actor = accounts.add()
+
+    # Expect
+    with pytest.raises(exceptions.VirtualMachineError):
+        tx = fund_me.withdraw({"from": bad_actor})
